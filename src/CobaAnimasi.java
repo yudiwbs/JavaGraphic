@@ -2,13 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import static java.awt.BorderLayout.PAGE_START;
-
-
 //extend JFrame
 public class CobaAnimasi extends JFrame {
 
-    private MyPanel2 panel2;
+    private MyPanel3 panel3;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -23,43 +20,39 @@ public class CobaAnimasi extends JFrame {
         setTitle("Judul");
 
         //panel tempat lingkaran di gambar
-        panel2 = new MyPanel2();
-        panel2.setPreferredSize(new Dimension(300, 100));
+        panel3 = new MyPanel3();
+        panel3.setPreferredSize(new Dimension(300, 100));
 
 
         //panel yg berisi textbox untuk mengatur ukuran lingkaran
-        //flowlayout artinya komponen diletakan dari kiri ke kanan
-        //banyak layout yg lain: gridlayout, boxlayout dsb silakan digoogling
         JPanel ukuranPanel = new JPanel(new FlowLayout());
         //komponen label
         JLabel labelSetUkuran = new JLabel();
         labelSetUkuran.setText("Ukuran Lingkaran?");
-        //tambah label ke panel
         ukuranPanel.add(labelSetUkuran);
+
         //textfield untuk menerima input
         JTextField fieldUkuranLingkaran = new JTextField(5);
-        //add ke panel, karena layoutnya flow, maka akan ditambah di sebelah kanan label
-        fieldUkuranLingkaran.setText(Integer.toString(panel2.ukuranLingkaran)); //set dengan value awal
+        fieldUkuranLingkaran.setText(Integer.toString(panel3.ukuranLingkaran)); //set dengan value awal
         ukuranPanel.add(fieldUkuranLingkaran);
 
         //button yang jika ditekan akan mengubah ukuran lingkaran
         JButton btnSetUkuran = new JButton("Set Ukuran");
         ukuranPanel.add(btnSetUkuran);
 
-        //event yang akan dipanggil saat button diklik
+        //event yang akan dipanggil saat button diklik, nilai yg diinput user dimasukkan ke panel
+        //refresh untuk menggambar lingkaran yg baru
         btnSetUkuran.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 //ambil dari field isian, convert ke int
-                panel2.ukuranLingkaran = Integer.valueOf(fieldUkuranLingkaran.getText());
-                panel2.repaint(); //redraw panel
+                panel3.ukuranLingkaran = Integer.valueOf(fieldUkuranLingkaran.getText());
+                panel3.repaint(); //redraw panel
                 requestFocus(); // change the focus to JFrame to receive KeyEvent
             }
         });
 
 
-
-        //=============
-
+        //panel button
         //panel yg berisi button untuk menggerakan ke kiri dan kanan
         JPanel btnPanel = new JPanel(new FlowLayout());
         JButton btnLeft = new JButton("Geser Kiri");
@@ -70,12 +63,12 @@ public class CobaAnimasi extends JFrame {
         labelInfo.setText("Anda juga bisa gunakan panah kiri dan kanan");
         btnPanel.add(labelInfo);
 
-
+        // event saat button ditekan
         //tombol kiri di tekan, geser posisi
         btnLeft.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                panel2.posX = panel2.posX - 10;
-                panel2.repaint(); //redraw panel
+                panel3.posX = panel3.posX - 10;
+                panel3.repaint(); //redraw panel
                 requestFocus();  // change the focus to JFrame to receive KeyEvent
             }
         });
@@ -84,14 +77,14 @@ public class CobaAnimasi extends JFrame {
         //tombol kiri di tekan, geser posisi
         btnRight.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                panel2.posX = panel2.posX + 10;
-                panel2.repaint(); //redraw panel
+                panel3.posX = panel3.posX + 10;
+                panel3.repaint(); //redraw panel
                 requestFocus();  // change the focus to JFrame to receive KeyEvent
             }
         });
 
 
-        // penangan jika panah ditekan..
+        // penangan jika panah di keyboard ditekan..
         // "super" JFrame fires KeyEvent
         addKeyListener(new KeyAdapter() {
             @Override
@@ -99,25 +92,24 @@ public class CobaAnimasi extends JFrame {
                 switch(evt.getKeyCode()) {
                     //panah kiri
                     case KeyEvent.VK_LEFT:
-                        panel2.posX = panel2.posX - 10; //harusnya jangan duplikasi dgn button sih.
+                        panel3.posX = panel3.posX - 10; //masih duplikasi dgn button sih.
                         repaint();
                         break;
+                    //panah kanan
                     case KeyEvent.VK_RIGHT:
-                        panel2.posX = panel2.posX + 10;
+                        panel3.posX = panel3.posX + 10;
                         repaint();
                         break;
                 }
             }
         });
 
-
-
+        //tambah panel ke frame
         Container cp = getContentPane();
         cp.setLayout(new BorderLayout());
         //tambah panel2 di tengah
-        cp.add(panel2, BorderLayout.CENTER);
+        cp.add(panel3, BorderLayout.CENTER);
         //tambah panel berisi button di bagian bawah (selatan)
-
         cp.add(btnPanel, BorderLayout.PAGE_END);
         cp.add(ukuranPanel, BorderLayout.PAGE_START);
 
@@ -129,14 +121,13 @@ public class CobaAnimasi extends JFrame {
     }
 }
 
-class MyPanel2 extends JPanel {
-
+class MyPanel3 extends JPanel {
     //atribut lingkaran
     public int ukuranLingkaran=75;
     public int posX = 350;
     public int posY = 50;
 
-    public MyPanel2() {
+    public MyPanel3() {
         //border berwarna hitam di panel
         setBorder(BorderFactory.createLineBorder(Color.black));
     }
@@ -148,10 +139,6 @@ class MyPanel2 extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLUE);
-        // koordinat 0,0 ada di kiri atas
-        // Draw Text
-        g.drawString("Hello, world!",10,20);
-        // x kiri atas, y kiri atas, lebar, tinggi  (jika lebar==tinggi artinya lingkaran)
         g.fillOval(posX, posY,  ukuranLingkaran,ukuranLingkaran);
 
     }
